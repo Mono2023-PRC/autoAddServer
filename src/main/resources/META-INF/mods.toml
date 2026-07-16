@@ -1,4 +1,4 @@
-modLoader="neoforge"
+modLoader="javafml"
 loaderVersion="[21,)"
 license="MIT"
 
@@ -8,12 +8,26 @@ version="${version}"
 displayName="Auto Server"
 authors="Example"
 description="""
-Automatically adds servers to the multiplayer server list.
+Automatically adds servers to the multiplayer server list from remote API.
 """
 
 [[dependencies.autoserver]]
 modId="neoforge"
 mandatory=true
 versionRange="[21,)"
+ordering="NONE"
+side="CLIENT"
+
+[[dependencies.autoserver]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.21.1]"
+ordering="NONE"
+side="CLIENT"
+
+[[dependencies.autoserver]]
+modId="mixinbooter"
+mandatory=false
+versionRange="[8,)"
 ordering="NONE"
 side="CLIENT"

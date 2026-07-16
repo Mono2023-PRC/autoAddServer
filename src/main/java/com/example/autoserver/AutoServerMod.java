@@ -1,34 +1,81 @@
 package com.example.autoserver;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.ServerList;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.client.event.ScreenEvent;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.client.event.ClientChatEvent;
 
 @Mod(value = AutoServerMod.MOD_ID, dist = Dist.CLIENT)
 public class AutoServerMod {
     public static final String MOD_ID = "autoserver";
-    private static boolean added = false;
+    private static AutoServerMod instance;
+    private final ConfigManager configManager;
+    private final AsyncServerFetcher fetcher;
 
-    @SubscribeEvent
-    public void onScreenOpen(ScreenEvent.Opening event) {
-        if (!added && Minecraft.getInstance().level == null) {
-            addServer("我的服务器", "your.server.ip:25565");
-            added = true;
+    public AutoServerMod(IEventBus modEventBus) {
+        instance = this;
+        configManager = ConfigManager.getInstance();
+        fetcher = new AsyncServerFetcher();
+        
+        modEventBus.addListener(this::onClientSetup);
+    }
+
+    private void onClientSetup(FMLClientSetupEvent event) {
+    }
+
+    public static AutoServerMod getInstance() {
+        return instance;
+    }
+
+    public static void openApiSettingsScreen(Screen parent) {
+        Minecraft.getInstance().setScreen(new ApiSettingsScreen(parent));
+    }
+
+    public static void refreshServer() {
+        if (instance != null && instance.configManager.hasApiUrl()) {
+            instance.fetcher.resetAndRetry(instance.configManager.getApiUrl(), instance.createCallback());
         }
     }
 
-    private void addServer(String name, String ip) {
-        ServerList list = new ServerList(Minecraft.getInstance());
-        list.load();
-        for (int i = 0; i < list.size(); i++) {
-            if (list.get(i).ip.equals(ip)) return;
+    public static void fetchAndAddServer() {
+        if (instance != null && instance.configManager.hasApiUrl()) {
+            instance.fetcher.fetchServerIp(instance.configManager.getApiUrl(), instance.createCallback());
         }
-        ServerData data = new ServerData(name, ip, ServerData.Type.SERVER);
-        list.add(data, false);
-        list.save();
+    }
+
+    private AsyncServerFetcher.ServerFetchCallback createCallback() {
+        return new AsyncServerFetcher.ServerFetchCallback() {
+            @Override
+            public void onSuccess(String ip) {
+                addServer("自动添加服务器", ip);
+            }
+
+            @Override
+            public void onFailure(String error) {
+            }
+        };
+    }
+
+    private static void addServer(String name, String ip) {
+        Minecraft mc = Minecraft.getInstance();
+        mc.execute(() -> {
+            ServerList list = new ServerList(mc);
+            list.load();
+            
+            for (int i = 0; i < list.size(); i++) {
+                if (list.get(i).ip.equals(ip)) {
+                    return;
+                }
+            }
+            
+            ServerData data = new ServerData(name, ip, ServerData.Type.SERVER);
+            list.add(data, false);
+            list.save();
+        });
     }
 }

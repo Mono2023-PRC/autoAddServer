@@ -1,0 +1,5 @@
+.gradle/
+build/
+temp_gradle/
+gradle-*.zip
+*.log
