@@ -19,12 +19,12 @@ public abstract class JoinMultiplayerScreenMixin extends Screen {
 
     @Inject(method = "init", at = @At("TAIL"))
     public void addAutoServerButtons(CallbackInfo ci) {
-        int buttonWidth = 80;
-        int buttonHeight = 20;
-        int spacing = 5;
+        int buttonWidth = 60;
+        int buttonHeight = 16;
+        int spacing = 4;
         
-        int x = this.width / 2 - buttonWidth - spacing / 2;
-        int y = this.height - 35;
+        int x = 15;
+        int y = this.height - 50;
         
         this.addRenderableWidget(Button.builder(
                 Component.literal("设置API"),
@@ -34,7 +34,7 @@ public abstract class JoinMultiplayerScreenMixin extends Screen {
         this.addRenderableWidget(Button.builder(
                 Component.literal("刷新"),
                 button -> AutoServerMod.refreshServer()
-        ).bounds(x + buttonWidth + spacing, y, buttonWidth, buttonHeight).build());
+        ).bounds(x, y + buttonHeight + spacing, buttonWidth, buttonHeight).build());
         
         ConfigManager config = ConfigManager.getInstance();
         if (config.hasApiUrl()) {

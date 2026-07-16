@@ -30,7 +30,7 @@ public class ApiSettingsScreen extends Screen {
         apiUrlField.setMaxLength(100);
         apiUrlField.setValue(configManager.getApiUrl());
         apiUrlField.setHint(Component.literal("请输入域名:端口"));
-        this.addWidget(apiUrlField);
+        this.addRenderableWidget(apiUrlField);
         
         int buttonWidth = 100;
         int buttonHeight = 20;
