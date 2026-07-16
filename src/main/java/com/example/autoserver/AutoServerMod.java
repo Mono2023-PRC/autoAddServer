@@ -5,7 +5,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.ServerList;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.ClientChatEvent;
@@ -16,16 +16,13 @@ public class AutoServerMod {
     private static AutoServerMod instance;
     private final ConfigManager configManager;
     private final AsyncServerFetcher fetcher;
+    private boolean hasFetchedThisSession;
 
-    public AutoServerMod(IEventBus modEventBus) {
+    public AutoServerMod() {
         instance = this;
         configManager = ConfigManager.getInstance();
         fetcher = new AsyncServerFetcher();
-        
-        modEventBus.addListener(this::onClientSetup);
-    }
-
-    private void onClientSetup(FMLClientSetupEvent event) {
+        hasFetchedThisSession = false;
     }
 
     public static AutoServerMod getInstance() {
@@ -38,12 +35,14 @@ public class AutoServerMod {
 
     public static void refreshServer() {
         if (instance != null && instance.configManager.hasApiUrl()) {
+            instance.hasFetchedThisSession = false;
             instance.fetcher.resetAndRetry(instance.configManager.getApiUrl(), instance.createCallback());
         }
     }
 
     public static void fetchAndAddServer() {
-        if (instance != null && instance.configManager.hasApiUrl()) {
+        if (instance != null && instance.configManager.hasApiUrl() && !instance.hasFetchedThisSession) {
+            instance.hasFetchedThisSession = true;
             instance.fetcher.fetchServerIp(instance.configManager.getApiUrl(), instance.createCallback());
         }
     }
@@ -57,6 +56,7 @@ public class AutoServerMod {
 
             @Override
             public void onFailure(String error) {
+                instance.hasFetchedThisSession = false;
             }
         };
     }

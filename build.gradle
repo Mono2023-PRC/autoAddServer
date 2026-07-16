@@ -16,10 +16,6 @@ java {
 
 neoForge {
     version = "${neoforge_version}"
-    
-    mixin {
-        add "${mod_id}", "mixins.${mod_id}.json"
-    }
 }
 
 tasks.withType(JavaCompile) {

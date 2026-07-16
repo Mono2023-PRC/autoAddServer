@@ -31,3 +31,7 @@ mandatory=false
 versionRange="[8,)"
 ordering="NONE"
 side="CLIENT"
+
+[[mixins]]
+config="mixins.autoserver.json"
+
