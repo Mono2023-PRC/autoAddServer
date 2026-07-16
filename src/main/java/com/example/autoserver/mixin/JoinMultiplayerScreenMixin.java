@@ -3,7 +3,7 @@ package com.example.autoserver.mixin;
 import com.example.autoserver.AutoServerMod;
 import com.example.autoserver.ConfigManager;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.screens.JoinMultiplayerScreen;
+import net.minecraft.client.gui.screens.multiplayer.JoinMultiplayerScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;

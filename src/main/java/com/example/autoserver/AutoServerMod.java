@@ -73,7 +73,7 @@ public class AutoServerMod {
                 }
             }
             
-            ServerData data = new ServerData(name, ip, ServerData.Type.SERVER);
+            ServerData data = new ServerData(name, ip, false);
             list.add(data, false);
             list.save();
         });
