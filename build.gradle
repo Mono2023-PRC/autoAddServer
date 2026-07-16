@@ -1,0 +1,36 @@
+plugins {
+    id 'net.neoforged.gradle' version '[6.0, 7.0)'
+}
+
+version = "${mod_version}"
+group = "${group}"
+
+base {
+    archivesName = "${archives_base_name}"
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    neoforge "net.neoforged:neoforge:${neoforge_version}"
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+    options.compilerArgs.add('-parameters')
+}
+
+processResources {
+    inputs.property 'version', project.version
+    
+    filesMatching('META-INF/mods.toml') {
+        expand 'version': project.version, 'mod_id': mod_id
+    }
+}

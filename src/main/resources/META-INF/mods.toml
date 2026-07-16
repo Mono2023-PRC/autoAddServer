@@ -1,0 +1,19 @@
+modLoader="neoforge"
+loaderVersion="[21,)"
+license="MIT"
+
+[[mods]]
+modId="${mod_id}"
+version="${version}"
+displayName="Auto Server"
+authors="Example"
+description="""
+Automatically adds servers to the multiplayer server list.
+"""
+
+[[dependencies.autoserver]]
+modId="neoforge"
+mandatory=true
+versionRange="[21,)"
+ordering="NONE"
+side="CLIENT"
