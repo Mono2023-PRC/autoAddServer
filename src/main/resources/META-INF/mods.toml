@@ -1,4 +1,4 @@
-modLoader="javafml"
+modLoader="neoforge"
 loaderVersion="[21,)"
 license="MIT"
 
@@ -22,13 +22,6 @@ side="CLIENT"
 modId="minecraft"
 mandatory=true
 versionRange="[1.21.1]"
-ordering="NONE"
-side="CLIENT"
-
-[[dependencies.autoserver]]
-modId="mixinbooter"
-mandatory=false
-versionRange="[8,)"
 ordering="NONE"
 side="CLIENT"
 
